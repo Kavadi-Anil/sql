@@ -1,0 +1,220 @@
+📌 This is the table I'm going to use to explain different SQL RANK functions like ROW_NUMBER(), RANK(), and DENSE_RANK().
+
+✅ Query:
+SELECT emp_id, emp_name, dept_id, salary
+FROM employee;
+
+📤 Output:
+
+emp_id | emp_name | dept_id | salary
+-------|----------|---------|--------
+1      | Ankit    | 100     | 10000
+2      | Mohit    | 100     | 15000
+3      | Vikas    | 100     | 10000
+4      | Rohit    | 100     | 5000
+5      | Mudit    | 200     | 12000
+6      | Agam     | 200     | 12000
+7      | Sanjay   | 200     | 9000
+8      | Ashish   | 200     | 5000
+9      | Mukesh   | 300     | 6000
+10     | Rakesh   | 500     | 7000
+11     | ramesh   | 300     | 5000
+
+
+
+
+
+
+
+
+
+
+
+
+❌ Incorrect Query:
+SELECT *,
+       ROW_NUMBER() OVER()
+FROM employee;
+
+-- ❌ This will throw an error:
+-- Msg 4112: The function 'ROW_NUMBER' must have an OVER clause with ORDER BY.
+
+-- 🔍 Why?
+-- ROW_NUMBER() assigns a unique number to each row, but it needs a defined order.
+-- Without ORDER BY, SQL doesn't know how to rank the rows.
+
+✅ Correct Query:
+SELECT emp_id, emp_name, dept_id, salary,
+       ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
+FROM employee;
+
+📤 Output:
+
+emp_id | emp_name | dept_id | salary | row_num
+-------|----------|---------|--------|---------
+2      | Mohit    | 100     | 15000  | 1
+5      | Mudit    | 200     | 12000  | 2
+6      | Agam     | 200     | 12000  | 3
+3      | Vikas    | 100     | 10000  | 4
+1      | Ankit    | 100     | 10000  | 5
+7      | Sanjay   | 200     | 9000   | 6
+10     | Rakesh   | 500     | 7000   | 7
+9      | Mukesh   | 300     | 6000   | 8
+4      | Rohit    | 100     | 5000   | 9
+8      | Ashish   | 200     | 5000   | 10
+11     | ramesh   | 300     | 5000   | 11
+
+💡 Tip:
+Use ROW_NUMBER() with ORDER BY to assign a unique, sequential rank to each row based on your sorting criteria.
+
+
+
+
+
+
+
+
+
+
+
+
+📌 Let's understand the difference between ROW_NUMBER(), RANK(), and DENSE_RANK() using this SQL query:
+
+✅ Query:
+SELECT emp_id, emp_name, dept_id, salary,
+       ROW_NUMBER() OVER (ORDER BY salary DESC) AS ROW_NO,
+       RANK()       OVER (ORDER BY salary DESC) AS RANK_NO,
+       DENSE_RANK() OVER (ORDER BY salary DESC) AS DENSE_RANK_NO
+FROM employee;
+
+📤 Output:
+
+emp_id | emp_name | dept_id | salary | ROW_NO | RANK_NO | DENSE_RANK_NO
+-------|----------|---------|--------|--------|---------|----------------
+2      | Mohit    | 100     | 15000  | 1      | 1       | 1
+5      | Mudit    | 200     | 12000  | 2      | 2       | 2
+6      | Agam     | 200     | 12000  | 3      | 2       | 2
+3      | Vikas    | 100     | 10000  | 4      | 4       | 3
+1      | Ankit    | 100     | 10000  | 5      | 4       | 3
+7      | Sanjay   | 200     | 9000   | 6      | 6       | 4
+10     | Rakesh   | 500     | 7000   | 7      | 7       | 5
+9      | Mukesh   | 300     | 6000   | 8      | 8       | 6
+4      | Rohit    | 100     | 5000   | 9      | 9       | 7
+8      | Ashish   | 200     | 5000   | 10     | 9       | 7
+11     | ramesh   | 300     | 5000   | 11     | 9       | 7
+
+📘 Explanation:
+
+🔹 ROW_NUMBER():
+- Assigns a **unique sequential number** to each row.
+- No duplicates — even if values are tied.
+
+🔹 RANK():
+- Assigns the **same rank to tied values**.
+- Skips the next rank(s) for ties.
+
+🔹 DENSE_RANK():
+- Assigns the **same rank to ties**, but **does NOT skip** subsequent ranks.
+
+📊 Use these functions for:
+- Pagination (ROW_NUMBER)
+- Top-N results with ties (RANK or DENSE_RANK)
+- Data ranking or leaderboard logic
+
+#SQL #DataEngineering #ROWNUMBER #RANK #DENSERANK #WindowFunctions #SQLTips #LearningSQL
+
+
+
+
+
+📌 Using PARTITION BY with ROW_NUMBER(), RANK(), and DENSE_RANK()
+
+When we use PARTITION BY in window functions, it divides the data into **groups (partitions)** — in this case, by `dept_id`. Ranking is then applied **within each department** separately.
+
+✅ Query:
+SELECT emp_id, emp_name, dept_id, salary,
+       ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS ROW_NO,
+       RANK()       OVER (PARTITION BY dept_id ORDER BY salary DESC) AS RANK_NO,
+       DENSE_RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS DENSE_RANK_NO
+FROM employee;
+
+📤 Output:
+
+emp_id | emp_name | dept_id | salary | ROW_NO | RANK_NO | DENSE_RANK_NO
+-------|----------|---------|--------|--------|---------|----------------
+2      | Mohit    | 100     | 15000  | 1      | 1       | 1
+3      | Vikas    | 100     | 10000  | 2      | 2       | 2
+1      | Ankit    | 100     | 10000  | 3      | 2       | 2
+4      | Rohit    | 100     | 5000   | 4      | 4       | 3
+5      | Mudit    | 200     | 12000  | 1      | 1       | 1
+6      | Agam     | 200     | 12000  | 2      | 1       | 1
+7      | Sanjay   | 200     | 9000   | 3      | 3       | 2
+8      | Ashish   | 200     | 5000   | 4      | 4       | 3
+9      | Mukesh   | 300     | 6000   | 1      | 1       | 1
+11     | ramesh   | 300     | 5000   | 2      | 2       | 2
+10     | Rakesh   | 500     | 7000   | 1      | 1       | 1
+
+📘 Explanation:
+
+🔹 `PARTITION BY dept_id`: divides data into separate "windows" per department.
+
+Then within each department:
+- 🔢 `ROW_NUMBER()`: sequential rank, no duplicates.
+- 🏅 `RANK()`: ties share rank, next ranks skipped.
+- 🏆 `DENSE_RANK()`: ties share rank, no skips.
+
+💡 This is powerful for ranking within categories — like employees by salary within departments.
+
+
+
+
+
+
+
+📌 How to Get Top 2 Highest Salaried Employees in Each Department
+
+❌ Incorrect Query:
+SELECT emp_id, emp_name, dept_id, salary,
+       ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS ROW_NO,
+       RANK()       OVER (PARTITION BY dept_id ORDER BY salary DESC) AS RANK_NO,
+       DENSE_RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS DENSE_RANK_NO
+FROM employee
+WHERE DENSE_RANK_NO <= 2;
+
+-- ❌ This will throw an error:
+-- "Invalid column name 'DENSE_RANK_NO'"
+
+🧠 Why?
+- In SQL, the `WHERE` clause is evaluated **before** the `SELECT` clause.
+- At the time SQL runs the `WHERE`, the alias `DENSE_RANK_NO` from the SELECT doesn’t exist yet.
+- Window functions must be calculated **before** filtering — and that’s why we need a CTE or subquery.
+
+✅ Correct Query (Using CTE):
+WITH ranked_table AS (
+    SELECT emp_id, emp_name, dept_id, salary,
+           ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS ROW_NO,
+           RANK()       OVER (PARTITION BY dept_id ORDER BY salary DESC) AS RANK_NO,
+           DENSE_RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS DENSE_RANK_NO
+    FROM employee
+)
+SELECT * FROM ranked_table
+WHERE DENSE_RANK_NO <= 2;
+
+📤 Output:
+
+emp_id | emp_name | dept_id | salary | ROW_NO | RANK_NO | DENSE_RANK_NO
+-------|----------|---------|--------|--------|---------|----------------
+2      | Mohit    | 100     | 15000  | 1      | 1       | 1
+3      | Vikas    | 100     | 10000  | 2      | 2       | 2
+1      | Ankit    | 100     | 10000  | 3      | 2       | 2
+5      | Mudit    | 200     | 12000  | 1      | 1       | 1
+6      | Agam     | 200     | 12000  | 2      | 1       | 1
+7      | Sanjay   | 200     | 9000   | 3      | 3       | 2
+9      | Mukesh   | 300     | 6000   | 1      | 1       | 1
+11     | ramesh   | 300     | 5000   | 2      | 2       | 2
+10     | Rakesh   | 500     | 7000   | 1      | 1       | 1
+
+💡 Tip:
+To filter results based on a window function, **wrap the logic in a CTE (or subquery)** and apply your filter in the outer query.
+
+#SQL #DataEngineering #WindowFunctions #CTE #RANK #ROWNUMBER #DENSERANK #SQLTips #LearningSQL
