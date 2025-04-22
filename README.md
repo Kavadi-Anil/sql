@@ -1,2 +1,2 @@
 # sql
-SQL
+this is all about sql 
