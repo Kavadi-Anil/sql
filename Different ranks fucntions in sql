@@ -103,18 +103,19 @@ emp_id | emp_name | dept_id | salary | ROW_NO | RANK_NO | DENSE_RANK_NO
 8      | Ashish   | 200     | 5000   | 10     | 9       | 7
 11     | ramesh   | 300     | 5000   | 11     | 9       | 7
 
-📘 Explanation:
+Explanation:
 
-🔹 ROW_NUMBER():
-- Assigns a **unique sequential number** to each row.
-- No duplicates — even if values are tied.
+ROW_NUMBER():
+- Gives a new number to every row, even if the salary is the same.
 
-🔹 RANK():
-- Assigns the **same rank to tied values**.
-- Skips the next rank(s) for ties.
+RANK():
+- If two rows have the same salary, they get the same rank.
+- It skips the next rank value for duplicates.
 
-🔹 DENSE_RANK():
-- Assigns the **same rank to ties**, but **does NOT skip** subsequent ranks.
+DENSE_RANK():
+- If two rows have the same salary, they get the same rank.
+- It does not skip the next rank after duplicates.
+
 
 📊 Use these functions for:
 - Pagination (ROW_NUMBER)
