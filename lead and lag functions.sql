@@ -105,7 +105,7 @@ LEAD() is used here along with PARTITION BY dept_id.
 - ORDER BY salary DESC ensures we look from highest to lowest salary within each department.
 - NULL appears when there is no lower salary available within the department.
 
-✅ This helps compare employees' salaries inside their own departments easily without complicated joins!
+✅ This helps compare employees salaries inside their own departments easily without complicated joins!
 
 
 
@@ -176,7 +176,7 @@ emp_id   emp_name   dept_id   salary   salary_desc_lead
 -- 🧠 Explanation:
 LAG() is a window function that looks backward from the current row.
 - Here, we are ordering by salary descending (highest to lowest).
-- LAG(salary,1) brings the **previous higher salary** next to the current employee's salary.
+- LAG(salary,1) brings the **previous higher salary** next to the current employees salary.
 - NULL appears for the top salary (because there is no higher salary before it).
 
 ✅ Very useful when comparing a value with its previous one in a sorted order (e.g., salary drop, sales trends)!
