@@ -193,8 +193,11 @@ Let’s explore how index usage varies depending on SELECT and WHERE clause patt
 
 ------------------------------------------------------------
 
-1️⃣ Only Indexed Column in SELECT + WHERE
+1️⃣ ONLY INDEXED COLUMN IN SELECT + WHERE
 ------------------------------------------
+Index:
+CREATE NONCLUSTERED INDEX idx_salary ON employee(salary);
+
 Query:
 SELECT salary FROM employee WHERE salary = 10000;
 
@@ -207,8 +210,11 @@ SELECT salary FROM employee WHERE salary = 10000;
 
 ------------------------------------------------------------
 
-2️⃣ Indexed Column in WHERE + Additional Column in SELECT
+2️⃣ INDEXED COLUMN IN WHERE + ADDITIONAL COLUMN IN SELECT
 ----------------------------------------------------------
+Index:
+CREATE NONCLUSTERED INDEX idx_salary ON employee(salary);
+
 Query:
 SELECT employee_id, salary FROM employee WHERE salary = 10000;
 
@@ -224,8 +230,11 @@ SELECT employee_id, salary FROM employee WHERE salary = 10000;
 
 ------------------------------------------------------------
 
-3️⃣ Filtering on Indexed + Non-Indexed Columns
+3️⃣ FILTERING ON INDEXED + NON-INDEXED COLUMNS
 ----------------------------------------------
+Index:
+CREATE NONCLUSTERED INDEX idx_salary ON employee(salary);
+
 Query:
 SELECT * FROM employee WHERE salary = 10000 AND employee_id > 1332;
 
@@ -352,15 +361,5 @@ ON orders_index(customer_id);
 | Create index on WHERE column    | ✅ Improves filter performance                                |
 | Create index on JOIN column     | ✅ Speeds up joins                                            |
 | Unique non-clustered index      | ✅ Use for unique values like employee_id, order_id          |
-
-
-
-
-
-
-
-
-
-
 
 
